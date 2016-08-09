@@ -12,6 +12,8 @@ Help
 ----
 
 Download the index.html file, then open it in your favourite web browser.  
+*Hint - click [here](https://github.com/angusi/WebCountdownClock/archive/master.zip) to download, then unzip!*
+
 Help information will be shown when the page loads.
 
 |Key    | Function          |
