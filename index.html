@@ -75,12 +75,29 @@
                     seconds = 0,
                     timeout;
                     
-            function clockToggleVisibility() {
-                if (document.getElementById("clock").style.display != 'none') {
-                    document.getElementById("clock").style.display = 'none';
-                } else {
-                    document.getElementById("clock").style.display = 'block';
+            function clockToggleIdVisibility(id) {
+                if (!clockIdHide(id)) {
+                  if(!clockIdShow(id)) {
+                    return false;
+                  }
                 }
+                return true;
+            }
+            
+            function clockIdShow(id) {
+                if (document.getElementById(id).style.display != 'block') {
+                    document.getElementById(id).style.display = 'block';
+                    return true;
+                }
+                return false;
+            }
+            
+            function clockIdHide(id) {
+                if (document.getElementById(id).style.display != 'none') {
+                    document.getElementById(id).style.display = 'none';
+                    return true;
+                }
+                return false;
             }
             
             function clockReset() {
@@ -99,8 +116,7 @@
                 document.getElementById("minutes").value = minutes;
                 document.getElementById("seconds").value = seconds;
                 
-                if (document.getElementById("settings").style.display != 'block') {
-                    document.getElementById("settings").style.display = 'block';
+                if (clockIdShow("settings")) {
                     document.getElementById("hours").focus();
                 }
             }
@@ -136,33 +152,9 @@
                     initialEndDate = new Date(newEndDate.getTime());
                     endDate = new Date(initialEndDate.getTime());
                     
-                    clockSettingsClose();
-                }
-            }
-            
-            function clockSettingsClose() {
-                if (document.getElementById("settings").style.display != 'none') {
-                    document.getElementById("settings").style.display = 'none';
-                }
-            }
-            
-            function clockHelpOpen() {
-                if (document.getElementById("help").style.display != 'block') {
-                    document.getElementById("help").style.display = 'block';
-                }
-            }
-            
-            function clockHelpClose() {
-                if (document.getElementById("help").style.display != 'none') {
-                    document.getElementById("help").style.display = 'none';
-                }
-            }
-            
-            function clockHelpToggleVisibility() {
-             if (document.getElementById("help").style.display != 'none') {
-                    document.getElementById("help").style.display = 'none';
+                    return clockIdHide("settings");
                 } else {
-                    document.getElementById("help").style.display = 'block';
+                  return false;
                 }
             }
             
@@ -188,7 +180,7 @@
             <input id="minutes" type="number" min="0" max="99" value="0" /> :
             <input id="seconds" type="number" min="0" max="99" value="0" />
             <button onClick="clockSettingsSaveAndClose();">&#x2714;</button>
-            <button onClick="clockSettingsClose();">&#x2718;</button>
+            <button onClick="clockIdHide('settings')();">&#x2718;</button>
         </div>
         <div id="help">
             <h1>Help</h1>
@@ -211,21 +203,22 @@
                 if (!e) e = window.event;
                 var keyCode = e.keyCode;
                 if (keyCode == '13'){ //Return
-                  if (document.getElementById("settings").style.display != 'none') {
-                    clockSettingsSaveAndClose();
-                  } else {
-                    clockToggleVisibility();
+                  if (clockSettingsSaveAndClose() !== true) {
+                    clockToggleIdVisibility("clock");
                   }
                   return false;
                 } else if (keyCode == '32') { //Space
                   clockReset();
                   return false;
                 } else if (keyCode == '27') { //Escape
-                  clockHelpClose();
-                  clockSettingsOpen();
+                  if(clockIdHide("help")) {
+                    clockSettingsOpen();
+                  } else if(!clockIdHide("settings")) {
+                    clockSettingsOpen();
+                  }
                   return false;
                 } else if (keyCode == '72') { // h
-                  clockHelpToggleVisibility();
+                  clockToggleIdVisibility("help");
                   return false;
                 }
             }
